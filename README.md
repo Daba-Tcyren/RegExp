@@ -73,92 +73,143 @@ Complex x = new Complex(-5, 3.14);
 Дополнительное задание
 
 Были установлены FLEX&BISON и разработана грамматика для них. Результат прдеставлен на рисунке 5
-<img width="655" height="552" alt="изображение" src="https://github.com/user-attachments/assets/667c9a86-7e58-408b-99e3-dff1c3bf706f" />
-Рисунок 5 - Успешно просканирвоанная строка и синтаксическая ошибка 
+<img width="980" height="725" alt="изображение" src="https://github.com/user-attachments/assets/5eea5728-0108-421d-a79e-5e26488e9895" />
+
+Рисунок 5 - Успешно просканирвоанны строки
+
+<img width="981" height="726" alt="изображение" src="https://github.com/user-attachments/assets/cf873c75-5676-4723-a01a-487adf89d9d6" />
+
+Рисунок 6 - Ошибки
 
 Файл program.l 
     
     %{
-    #include "program.tab.h"
-    #include<stdio.h>
-    #include<string.h>
-    #include<stdlib.h>
+    #define YYSTYPE std::string
+    #define YY_NO_UNISTD_H
+    
+    #include <string>
+    #include "parser.tab.hpp"
+    
+    int line_number = 1;
     %}
     
-    %%
-    "Complex" {return COMPLEX_TYPE;}
-    "new" {return NEW;}
-    "print" {return PRINT;}
-    [a-zA-Z_][a-zA-Z0-9_]*  {yylval.str=strdup(yytext); return IDENTIFIER;}
-    -?[0-9]+\.[0-9]+ {yylval.dval=atof(yytext); return FLOAT_NUMBER;}
-    -?[0-9]+ {yylval.ival=atoi(yytext); return INTEGER_NUMBER;}
-    "=" {return '=';}
-    "(" {return '(';}
-    ")" {return ')';}
-    "," {return ',';}
-    ";" {return ';';}
-    [ \n\t] ;
-    . {return yytext[0];}
+    %option c++
+    %option noyywrap
+    %option yylineno
     
     %%
     
-    int yywrap()
-    {return 1;}
+    "Complex" {
+        yylval = yytext;
+        return COMPLEX_TYPE;
+    }
+    
+    "new" {
+        yylval = yytext;
+        return NEW;
+    }
+    
+    "=" {
+        yylval = yytext;
+        return EQUALS;
+    }
+    
+    ";" {
+        yylval = yytext;
+        return SEMICOLON;
+    }
+    
+    "(" {
+        yylval = yytext;
+        return OPEN_PAREN;
+    }
+    
+    ")" {
+        yylval = yytext;
+        return CLOSE_PAREN;
+    }
+    
+    "," {
+        yylval = yytext;
+        return COMMA;
+    }
+    
+    [a-zA-Z][a-zA-Z0-9]* {
+        yylval = yytext;
+        return ID;
+    }
+    
+    [+-]?[0-9]+(\.[0-9]+)?([Ee][+-]?[0-9]+)? {
+        yylval = yytext;
+        return NUMBER;
+    }
+    
+    \n {
+        line_number = yylineno;
+    }
+    
+    [ \t] {  }
+    
+    . {
+        yylval = yytext;
+        return LEXERROR;
+    }
+    
+    %%
 
 Файл program.y 
     
+    %define parse.error verbose 
     %{
-    #include<stdio.h>
-    #include<string.h>
-    #include<stdlib.h>
-    int yylex(void);
-    void yyerror(const char *s);
+    #include <string>
+    #include <list>
+    #include "SyntaxError.h"
+    
+    extern int yylex();
+    extern int line_number;
+    
+    std::list<syntaxError> error_list;
+    
+    void yyerror(const char* s)
+    {
+        syntaxError error;
+        error.errorMessage = std::string("error: ") + s;
+        error.line = line_number;
+        error_list.push_back(error);           
+    }
     %}
     
-    %union {
-    int ival;
-    double dval;
-    char *str;}
-    
-    %token COMPLEX_TYPE NEW
-    %token PRINT
-    %token <str> IDENTIFIER
-    %token <ival> INTEGER_NUMBER
-    %token <dval> FLOAT_NUMBER
-    
-    %type <dval> number signed_number
-    
-    %%
-    start:
-    | start line;
-    
-    line:
-    declaration ';'
-    | print_statement ';';
-    
-    print_statement:
-    PRINT IDENTIFIER
-    {printf(">>> PRINT: %s\n", $2);
-    free($2);};
-    
-    declaration:
-    COMPLEX_TYPE IDENTIFIER '=' NEW COMPLEX_TYPE '(' signed_number ',' signed_number ')' {printf(">>> DECLARATION: %s = (%g, %g)\n", $2, $7, $9);free($2);};
-    
-    signed_number:
-    number { $$ = $1; }
-    | '-' number { $$ = -$2; };
-    
-    number:
-    INTEGER_NUMBER { $$ = (double)$1; }
-    | FLOAT_NUMBER { $$ = $1; };
+    %token COMPLEX_TYPE
+    %token NEW
+    %token ID
+    %token EQUALS
+    %token SEMICOLON
+    %token OPEN_PAREN
+    %token CLOSE_PAREN
+    %token COMMA
+    %token NUMBER
+    %token LEXERROR
     
     %%
     
-    void yyerror(const char *s)
-    { printf("Syntax error: %s\n", s);}
+    prog: def progRem | ;
     
-    int main()
-    {printf("lexical analyzer\n");
-    printf("Enter an expression (for example: Complex x = new Complex(1.2, -6.76);)\n");
-    printf("Exit Ctrl+D\n\n");
-    return yyparse();}
+    def: COMPLEX_TYPE ID EQUALS NEW COMPLEX_TYPE OPEN_PAREN NUMBER COMMA NUMBER CLOSE_PAREN SEMICOLON
+        | COMPLEX_TYPE error EQUALS NEW COMPLEX_TYPE OPEN_PAREN NUMBER COMMA NUMBER CLOSE_PAREN SEMICOLON
+        | COMPLEX_TYPE ID error NEW COMPLEX_TYPE OPEN_PAREN NUMBER COMMA NUMBER CLOSE_PAREN SEMICOLON
+        | COMPLEX_TYPE ID EQUALS error COMPLEX_TYPE OPEN_PAREN NUMBER COMMA NUMBER CLOSE_PAREN SEMICOLON
+        | COMPLEX_TYPE ID EQUALS NEW error OPEN_PAREN NUMBER COMMA NUMBER CLOSE_PAREN SEMICOLON
+        | COMPLEX_TYPE ID EQUALS NEW COMPLEX_TYPE error NUMBER COMMA NUMBER CLOSE_PAREN SEMICOLON
+        | COMPLEX_TYPE ID EQUALS NEW COMPLEX_TYPE OPEN_PAREN error COMMA NUMBER CLOSE_PAREN SEMICOLON
+        | COMPLEX_TYPE ID EQUALS NEW COMPLEX_TYPE OPEN_PAREN NUMBER error NUMBER CLOSE_PAREN SEMICOLON
+        | COMPLEX_TYPE ID EQUALS NEW COMPLEX_TYPE OPEN_PAREN NUMBER COMMA error CLOSE_PAREN SEMICOLON
+        | COMPLEX_TYPE ID EQUALS NEW COMPLEX_TYPE OPEN_PAREN NUMBER COMMA NUMBER error SEMICOLON
+        | COMPLEX_TYPE ID EQUALS NEW COMPLEX_TYPE OPEN_PAREN NUMBER COMMA NUMBER CLOSE_PAREN error
+        | LEXERROR SEMICOLON
+        | error SEMICOLON;
+    
+    progRem: def progRem
+           | /* empty */
+           ;
+    
+    %%
