@@ -141,7 +141,7 @@ Springer	10.1007/s11042-024-12345-6
 Дополнительное задание
 реализовали алгоритм поиска подстрок переменных в стиле snake_case в тексте, перейдя к графу автомата
 
-<img width="453" height="157" alt="Тфяк-Страница — 2 drawio" src="https://github.com/user-attachments/assets/59cf53e3-b833-4ee5-a019-5d83c11fa95a" />
+<img width="961" height="462" alt="изображение" src="https://github.com/user-attachments/assets/ea5535ae-36b2-4a73-8cbc-dc21323302cd" />
 Рисунок 7 – Граф автомата переменных в стиле snake_case
 
 <img width="986" height="726" alt="изображение" src="https://github.com/user-attachments/assets/6643d24c-7865-4df7-8209-74da5df10ebe" />
