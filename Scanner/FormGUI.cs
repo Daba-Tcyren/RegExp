@@ -138,7 +138,7 @@ namespace Scanner
                     outputBox.Rows.Add(reportFile.fragment[i], reportFile.position[i], reportFile.length[i]);
                 }
             }
-
+            countOut = $"Количество найденных совпадений: {reportFile.fragment.Count}";
             // Делаем указатель на окно редактора в используемом файле
             inputBox = files.TabPages[files.SelectedIndex].GetChildAtPoint(new Point(51, 3)) as RichTextBox;
             inputBox.Focus();
@@ -246,7 +246,7 @@ namespace Scanner
                         pattern = @"([0-1][0-9]|2[0-3]):[0-5][0-9]";
                         break;
                     case 1:
-                        pattern = @"\b[a-z][a-z0-9]*(?:_[a-z0-9]+)+\b";
+                        pattern = @"\b[a-z][a-z]*(?:_[a-z]+)+\b";
                         break;
                     case 2:
 
@@ -563,9 +563,9 @@ namespace Scanner
 
             if (hours > 0) timeStatus = $"{hours}:{minutes}:{seconds}";
             else if (minutes > 0) timeStatus = $"{minutes}:{seconds}";
-            else timeStatus = $"{seconds} " + sec + "    " + countOut;
+            else timeStatus = $"{seconds} " + sec;
 
-            statusTimeApp.Text = time + timeStatus;
+            statusTimeApp.Text = time + timeStatus + "    " + countOut;
         }
 
         // Нумерация строк для окна редактирования

@@ -37,7 +37,7 @@ namespace Scanner
                     buffer += liter;
                     bool hasUnderscore = false;
 
-                    while (char.IsLower(liter = getChar()) || char.IsDigit(liter) || liter == '_')
+                    while (char.IsLower(liter = getChar()) || liter == '_')
                     {
                         buffer += liter;
                         if (liter == '_') hasUnderscore = true;
@@ -49,7 +49,24 @@ namespace Scanner
                     }
                     buffer = "";
                 }
-                getNext();
+                else
+                {
+                    switch (liter)
+                    {
+                        case '\0':
+                            getNext();
+                            break;
+                        case '\n':
+                            positionLine = 0;
+                            currentLine++;
+                            getNext();
+                            break;
+                        default:
+                            getNext();
+                            break;
+                    }
+                }
+                
             }
             return matchAutomat;
         }
