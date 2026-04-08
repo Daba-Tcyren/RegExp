@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 
@@ -19,11 +22,6 @@ namespace Scanner
         {
             InitializeComponent();
             files.TabPages.Add(NewFile("Новый документ 1"));
-            // Для сканера
-            outputBox.Columns[0].HeaderText = "Условный код";
-            outputBox.Columns[1].HeaderText = "Тип лексемы";
-            outputBox.Columns[2].HeaderText = "Лексема";
-            outputBox.Columns[3].HeaderText = "Местоположение";
         }
 
         // Меню - Файл
@@ -133,11 +131,11 @@ namespace Scanner
             outputBox.Rows.Clear();
 
             ReportFile reportFile = report[files.SelectedIndex];
-            for (int i = 0; i < reportFile.message.Count; i++)
+            for (int i = 0; i < reportFile.fragment.Count; i++)
             {
-                if (reportFile.message[i] != " " && reportFile.message[i] != "")
+                if (reportFile.fragment[i] != " " && reportFile.fragment[i] != "")
                 {
-                    outputBox.Rows.Add(reportFile.path[i], reportFile.line[i], reportFile.column[i], reportFile.message[i]);
+                    outputBox.Rows.Add(reportFile.fragment[i], reportFile.position[i], reportFile.length[i]);
                 }
             }
 
@@ -186,7 +184,19 @@ namespace Scanner
         }
         private void Delete_Click(object sender, EventArgs e)
         {
-            if (inputBox != null) inputBox.Clear();
+            if (inputBox != null)
+            {
+                if (inputBox.SelectionLength > 0)
+                {
+                    inputBox.SelectedText = "";
+                    return;            
+                }
+                if (inputBox.SelectionStart < inputBox.Text.Length)
+                {
+                    inputBox.Select(inputBox.SelectionStart, 1);
+                    inputBox.SelectedText = "";
+                }
+            }
         }
         private void SelectAll_Click(object sender, EventArgs e)
         {
@@ -197,7 +207,15 @@ namespace Scanner
 
         private void textWork_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Меню «Текст» будет реализовано позже. При вызове команд этого меню должны открываться окна с соответствующей информацией. ");
+            using (StreamReader reader = new StreamReader("text.txt"))
+            {
+                string line;
+                inputBox.Text = "";
+                while ((line = reader.ReadToEnd()) != "")
+                {
+                    inputBox.Text += line;
+                }
+            }
         }
 
         // Меню - Пуск
@@ -208,16 +226,85 @@ namespace Scanner
             {
                 outputBox.Rows.Clear();
 
-                scanner scannerWork = new scanner();
-                List<Token> tokens = scannerWork.analyze(inputBox.Text);
+                if(inputBox.Text == "" ||  inputBox.Text == " ")
+                {
+                    outputBox.Rows.Add("---", "Нет данных для поиска", "---");
+                    return;
+                }
 
+                string pattern = null;
+
+                ToolStripComboBox comboBoxRun = ComboBoxRegExp;
+                
                 ReportFile tempReport = new ReportFile();
 
-                foreach (Token token in tokens)
+                List<MatchAutomat> matchAutomat = null;
+
+                switch (comboBoxRun.SelectedIndex)
                 {
-                    outputBox.Rows.Add(token.id, token.type, token.name, token.location);
-                    tempReport.addReport(token.id.ToString(), token.type, token.name, token.location);
+                    case 0:
+                        pattern = @"([0-1][0-9]|2[0-3]):[0-5][0-9]";
+                        break;
+                    case 1:
+                        pattern = @"\b[a-z][a-z0-9]*(?:_[a-z0-9]+)+\b";
+                        break;
+                    case 2:
+
+                        Automat automat = new Automat();
+                        matchAutomat = automat.run(inputBox.Text);
+                        break;
+                    case 3:
+                        pattern = @"\b10\.\d{4}\/[._\-;%#()\/:+*\\|a-zA-Z0-9]+\b";
+                        break;
+                    default:
+                        pattern = @"([0-1][0-9]|2[0-3]):[0-5][0-9]";
+                        ComboBoxRegExp.SelectedIndex = 0;
+                        break;
                 }
+
+                int currentPosition = inputBox.SelectionStart;
+
+                inputBox.SelectAll();
+                inputBox.SelectionBackColor = Color.White;
+
+                if(comboBoxRun.SelectedIndex != 2)
+                {
+                    Regex regex = new Regex(pattern);
+                    MatchCollection matches = regex.Matches(inputBox.Text);
+
+                    foreach (Match match in matches)
+                    {
+                        int lineMatch = inputBox.GetLineFromCharIndex(match.Index);
+                        string position = $"строка {lineMatch + 1}, {match.Index - inputBox.GetFirstCharIndexFromLine(lineMatch) + 1}";
+                        outputBox.Rows.Add(match.Value, position, match.Length);
+                        tempReport.addReport(match.Value, position, match.Length.ToString());
+
+                        inputBox.Select(match.Index, match.Length);
+                        inputBox.SelectionBackColor = Color.Cyan;
+                    }
+
+                    countOut = $"Количество найденных совпадений: {matches.Count}";
+                }
+                else
+                {
+                    foreach (MatchAutomat match in matchAutomat)
+                    {
+                        outputBox.Rows.Add(match.fragment, match.position, match.length);
+                        tempReport.addReport(match.fragment, match.position, match.length);
+
+                        string location = match.position.Split(' ')[1];
+                        string line = location.Split(',')[0];
+                        int numberLine = Convert.ToInt32(line);
+                        string inLine = match.position.Split(' ')[2];
+                        int positioninstr = Convert.ToInt32(inLine);
+                        inputBox.Select(inputBox.GetFirstCharIndexFromLine(numberLine - 1) + positioninstr - 1, Convert.ToInt32(match.length));
+                        inputBox.SelectionBackColor = Color.Cyan;
+                    }
+                    countOut = $"Количество найденных совпадений: {matchAutomat.Count}";
+                }
+
+                inputBox.Select(currentPosition, 0);
+                inputBox.SelectionBackColor = Color.White;
 
                 int indexFile = files.SelectedIndex;
                 report.RemoveAt(indexFile);
@@ -463,6 +550,7 @@ namespace Scanner
         private int totalSec = 0;
         private string sec = "сек";
         private string time = "Время работы приложения: ";
+        private string countOut = "";
         private void timerApp_Tick(object sender, EventArgs e)
         {
             totalSec++;
@@ -475,7 +563,7 @@ namespace Scanner
 
             if (hours > 0) timeStatus = $"{hours}:{minutes}:{seconds}";
             else if (minutes > 0) timeStatus = $"{minutes}:{seconds}";
-            else timeStatus = $"{seconds} " + sec;
+            else timeStatus = $"{seconds} " + sec + "    " + countOut;
 
             statusTimeApp.Text = time + timeStatus;
         }
@@ -638,20 +726,18 @@ namespace Scanner
         }
         public class ReportFile
         {
-            public List<string> path = new List<string>();
-            public List<string> line = new List<string>();
-            public List<string> column = new List<string>();
-            public List<string> message = new List<string>();
-            public ReportFile(string path = "", string line = "0", string column = "0", string message = "")
+            public List<string> fragment = new List<string>();
+            public List<string> position = new List<string>();
+            public List<string> length = new List<string>();
+            public ReportFile(string fragment = "", string position = "0", string length = "0")
             {
-                addReport(path, line, column, message);
+                addReport(fragment, position, length);
             }
-            public void addReport(string path = "", string line = "0", string column = "0", string message = "")
+            public void addReport(string fragment = "", string position = "0", string length = "0")
             {
-                this.path.Add(path);
-                this.line.Add(line);
-                this.column.Add(column);
-                this.message.Add(message);
+                this.fragment.Add(fragment);
+                this.position.Add(position);
+                this.length.Add(length);
             }
         }
 
@@ -659,12 +745,12 @@ namespace Scanner
         {
             inputBox.Focus();
             if (e.RowIndex == -1) return;
-            string position = outputBox.Rows[e.RowIndex].Cells[3].Value.ToString();
+            string position = outputBox.Rows[e.RowIndex].Cells[1].Value.ToString();
             string location = position.Split(' ')[1];
             string line = location.Split(',')[0];
             int numberLine = Convert.ToInt32(line);
             string inLine = position.Split(' ')[2];
-            int positioninstr = Convert.ToInt32(inLine.Split('-')[0]);
+            int positioninstr = Convert.ToInt32(inLine);
             inputBox.Select(inputBox.GetFirstCharIndexFromLine(numberLine - 1) + positioninstr - 1, 1);
         }
     }

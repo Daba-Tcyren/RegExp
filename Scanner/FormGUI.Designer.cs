@@ -38,7 +38,6 @@
             this.column0 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.buttonCreate = new System.Windows.Forms.ToolStripButton();
             this.buttonOpen = new System.Windows.Forms.ToolStripButton();
@@ -78,7 +77,6 @@
             this.тестовыйПримерToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.списокЛитературыToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.исходныйКодПрограммыToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.пускToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.справкаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.вызовСправкиToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.оПрограммеToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -95,6 +93,10 @@
             this.timerApp = new System.Windows.Forms.Timer(this.components);
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.ComboBoxRegExp = new System.Windows.Forms.ToolStripComboBox();
+            this.пускToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             ((System.ComponentModel.ISupportInitialize)(this.outputBox)).BeginInit();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -141,7 +143,7 @@
             // 
             this.outputBox.AllowUserToAddRows = false;
             this.outputBox.AllowUserToDeleteRows = false;
-            this.outputBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+            this.outputBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.outputBox.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.outputBox.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCellsExceptHeaders;
@@ -149,8 +151,7 @@
             this.outputBox.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.column0,
             this.Column1,
-            this.Column2,
-            this.Column3});
+            this.Column2});
             this.outputBox.Location = new System.Drawing.Point(12, 364);
             this.outputBox.Name = "outputBox";
             this.outputBox.ReadOnly = true;
@@ -163,31 +164,24 @@
             // 
             // column0
             // 
-            this.column0.HeaderText = "Путь к файлу";
+            this.column0.HeaderText = "Найденная подстрока";
             this.column0.MinimumWidth = 6;
             this.column0.Name = "column0";
             this.column0.ReadOnly = true;
             // 
             // Column1
             // 
-            this.Column1.HeaderText = "Строка";
+            this.Column1.HeaderText = "Начальная позиция";
             this.Column1.MinimumWidth = 6;
             this.Column1.Name = "Column1";
             this.Column1.ReadOnly = true;
             // 
             // Column2
             // 
-            this.Column2.HeaderText = "Столбец";
+            this.Column2.HeaderText = "Длина";
             this.Column2.MinimumWidth = 6;
             this.Column2.Name = "Column2";
             this.Column2.ReadOnly = true;
-            // 
-            // Column3
-            // 
-            this.Column3.HeaderText = "Описание";
-            this.Column3.MinimumWidth = 6;
-            this.Column3.Name = "Column3";
-            this.Column3.ReadOnly = true;
             // 
             // toolStrip1
             // 
@@ -205,7 +199,10 @@
             this.buttonPaste,
             this.buttonRun,
             this.buttonHelp,
-            this.buttonAboutProgram});
+            this.buttonAboutProgram,
+            this.toolStripSeparator5,
+            this.toolStripLabel1,
+            this.ComboBoxRegExp});
             this.toolStrip1.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.toolStrip1.Location = new System.Drawing.Point(0, 24);
             this.toolStrip1.Name = "toolStrip1";
@@ -411,7 +408,7 @@
             this.сохранениеКакToolStripMenuItem.Enabled = false;
             this.сохранениеКакToolStripMenuItem.Name = "сохранениеКакToolStripMenuItem";
             this.сохранениеКакToolStripMenuItem.ShortcutKeyDisplayString = "Ctrl+Shift+S";
-            this.сохранениеКакToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
+            this.сохранениеКакToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.S)));
             this.сохранениеКакToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
             this.сохранениеКакToolStripMenuItem.Text = "Сохранить как";
@@ -590,21 +587,6 @@
             this.исходныйКодПрограммыToolStripMenuItem.Text = "Исходный код программы";
             this.исходныйКодПрограммыToolStripMenuItem.Click += new System.EventHandler(this.textWork_Click);
             // 
-            // пускToolStripMenuItem
-            // 
-            this.пускToolStripMenuItem.AutoToolTip = true;
-            this.пускToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.пускToolStripMenuItem.Enabled = false;
-            this.пускToolStripMenuItem.Name = "пускToolStripMenuItem";
-            this.пускToolStripMenuItem.ShortcutKeyDisplayString = "F5";
-            this.пускToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F5;
-            this.пускToolStripMenuItem.Size = new System.Drawing.Size(46, 20);
-            this.пускToolStripMenuItem.Text = "Пуск";
-            this.пускToolStripMenuItem.TextDirection = System.Windows.Forms.ToolStripTextDirection.Horizontal;
-            this.пускToolStripMenuItem.TextImageRelation = System.Windows.Forms.TextImageRelation.Overlay;
-            this.пускToolStripMenuItem.ToolTipText = "Пуск (F5)";
-            this.пускToolStripMenuItem.Click += new System.EventHandler(this.Run_Click);
-            // 
             // справкаToolStripMenuItem
             // 
             this.справкаToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -685,8 +667,8 @@
             // files
             // 
             this.files.AllowDrop = true;
-            this.files.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.files.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.files.Cursor = System.Windows.Forms.Cursors.Default;
             this.files.ItemSize = new System.Drawing.Size(65, 30);
@@ -740,6 +722,42 @@
             // 
             this.saveFileDialog1.DefaultExt = "txt";
             this.saveFileDialog1.Filter = "\"Text files(*.txt)|*.txt|All files(*.*)|*.*\"";
+            // 
+            // ComboBoxRegExp
+            // 
+            this.ComboBoxRegExp.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.ComboBoxRegExp.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.ComboBoxRegExp.Items.AddRange(new object[] {
+            "Блок 1: часы",
+            "Блок 2: snakeCase (RegExp)",
+            "Блок 2: snakeCase (Автомат)",
+            "Блок 3: DOI"});
+            this.ComboBoxRegExp.Name = "ComboBoxRegExp";
+            this.ComboBoxRegExp.Size = new System.Drawing.Size(180, 37);
+            this.ComboBoxRegExp.Text = "Выберете";
+            // 
+            // пускToolStripMenuItem
+            // 
+            this.пускToolStripMenuItem.AutoToolTip = true;
+            this.пускToolStripMenuItem.BackColor = System.Drawing.SystemColors.Control;
+            this.пускToolStripMenuItem.Name = "пускToolStripMenuItem";
+            this.пускToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F5;
+            this.пускToolStripMenuItem.Size = new System.Drawing.Size(46, 20);
+            this.пускToolStripMenuItem.Text = "Пуск";
+            this.пускToolStripMenuItem.TextImageRelation = System.Windows.Forms.TextImageRelation.Overlay;
+            this.пускToolStripMenuItem.ToolTipText = "Пуск (F5)";
+            this.пускToolStripMenuItem.Click += new System.EventHandler(this.Run_Click);
+            // 
+            // toolStripSeparator5
+            // 
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            this.toolStripSeparator5.Size = new System.Drawing.Size(6, 37);
+            // 
+            // toolStripLabel1
+            // 
+            this.toolStripLabel1.Name = "toolStripLabel1";
+            this.toolStripLabel1.Size = new System.Drawing.Size(142, 34);
+            this.toolStripLabel1.Text = "Регулярные выражения:";
             // 
             // FormGUI
             // 
@@ -812,11 +830,6 @@
         private System.Windows.Forms.ToolStripMenuItem текстToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton buttonHelp;
         private System.Windows.Forms.ToolStripButton buttonAboutProgram;
-        private System.Windows.Forms.DataGridViewTextBoxColumn column0;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column3;
-        private System.Windows.Forms.ToolStripMenuItem пускToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem локалиToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem размерТекстаToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem увеличитьToolStripMenuItem;
@@ -837,6 +850,13 @@
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.ToolStripMenuItem русскийToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem китайскийToolStripMenuItem;
+        private System.Windows.Forms.DataGridViewTextBoxColumn column0;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
+        private System.Windows.Forms.ToolStripComboBox ComboBoxRegExp;
+        private System.Windows.Forms.ToolStripMenuItem пускToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
+        private System.Windows.Forms.ToolStripLabel toolStripLabel1;
     }
 }
 
