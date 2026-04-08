@@ -1,0 +1,172 @@
+00:00 00:01 00:59 01:00
+01:10 01:30 02:15 03:45
+04:00 05:05 06:30 07:00
+08:08 09:59 10:00 11:11
+12:00 12:34 12:59 13:00
+14:22 15:15 16:40 17:22
+18:00 19:19 20:20 21:01
+22:22 23:00 23:59
+
+Встреча в 14:30 утра
+Поезд отправляется в 23:15
+Лог: [12:00] Запуск системы
+Режим работы: 09:00-18:00
+Последнее обновление: 2024-01-15 08:45:22
+Самолёт прилетает в 07:20, вылет в 22:40
+The event starts at 19:30
+Wake up at 06:00
+
+0:00
+1:01
+2:30
+3:45
+
+24:00
+24:01
+25:00
+29:59
+30:00
+99:99
+
+0:00
+00:0
+1:5
+9:05
+12:5
+
+0000
+1200
+2359
+
+00:60
+00:61
+00:99
+12:60
+23:70
+
+
+max_attempts
+first_name": "John",
+calculate_sum_fsd
+
+user_name = "Alex"
+def calculate_total_price(item_price, quantity):
+    return item_price * quantity
+
+def print_book_info(book_title, book_author, book_price):
+    print(f"Название: {book_title}")
+    print(f"Автор: {book_author}")
+    print(f"Цена: {book_price} руб.")
+
+
+
+first_name": "John"
+"last_name":"Doe"
+var user_age = 25;
+const MAX_RETRY_COUNT = 3;
+function get_user_id()
+this.is_active = true;
+--primary-color: #fff;
+data-user-id="123"
+snake_case and camelCase
+user_123_profile
+
+
+max_attempts
+first_name
+calculate_sum_fsd
+user_id
+a_b
+x
+count123
+max123_attempts456
+user_2fa_enabled
+version_2_0_1
+data_2024_jan
+file_name_123
+http_response_code_200
+is_valid_email
+get_user_by_id
+db_connection_pool_size
+api_v2_endpoint
+color_rgb_255_128_0
+temp_celsius_100
+id_007
+
+10.5594/SMPTE.ST2067-21.2020"
+10.1000/123456 
+10.1038/issn.1476-4687
+10.1006/jmbi.1998.2354
+10.2632/a.gutierrez.zarza.02.2018.03----
+
+https://doi.org/10.1002/(SICI)1098-2345(1997)43:2%3C159::AID-AJP5%3E3.0.CO;2-W
+
+10.1002/0470841557.ch1#p1
+10.5479/si.00810282.637.1
+
+Журнал	Пример DOI
+Nature 10.1038/s41586-024-07421-0
+Science	10.1126/science.abc1234
+Cell	10.1016/j.cell.2024.01.001;;::
+PLOS ONE	10.1371/journal.pone.0123456+#@$!
+IEEE	10.1109/TPAMI.2024.1234567!!
+Springer	10.1007/s11042-024-12345-6
+
+10.12345/energytech.2023.1
+10.21/FQSQT4T3
+10.123/abc
+10.17034/...
+10.1/1
+10.1234/abc123
+10.1000/123456
+
+10.3242/
+10.110/14684520610675816
+101108/14684520610675816
+1.1108/14684520610675816
+abc10.1234/def
+
+https://dx.doi.org/10.1108/14684520610675816
+https://dx.doi.org/10.1038/415726a
+10.5240/B1FA-0EEC-C316-3316-3A73-L
+
+https://doi.org/10.1045/dlib.magazine
+
+http://doi.acm.org/10.1145/1297797.1297815
+
+10.1525/bio.2009.59.5.9№№"
+
+https://doi.org/10.1045/january2017-stocker
+https://dx.doi.org/10.1073/pnas.0507655102
+https://dx.doi.org/10.1007/978-3-540-87599-4
+https://dx.doi.org/10.1045/september2008-imhof
+https://doi.org/10.1038/s41586-024-07421-0
+
+10.1000/292",
+10.1006/jmbi.1998.2354",
+10.1038/issn.1476-4687",
+10.5594/SMPTE.ST2067-21.2020",
+10.26321/a.gutierrez.zarza.02.2018.03",
+doi:10.1000/123456",
+https://doi.org/10.1000/292",
+urn:doi:10.1000/292"
+
+10.100/292
+20.1000/292
+10.1000/
+10.1000
+
+10.1016/S0140-6736(02)08641-8
+10.1021/ja00502a008
+10.1109/5.771073
+10.1126/science.169.3946.635
+10.1145/1297797.1297815
+10.1371/journal.pbio.0030016
+10.1093/gerona/56.5.M288
+10.1007/978-3-540-45210-8_1
+10.1000/ISBN-978-0-12345-678-9
+10.5240/B1FA-0EEC-C316-3316-3A73-L
+10.1038/nature.2012.10926
+10.1186/1471-2105-11-5
+10.1007/978-1-4939-7680-5_1
+10.1080/09500340.2011.554895
