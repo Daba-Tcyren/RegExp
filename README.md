@@ -1,215 +1,160 @@
-Лабораторная работа №2: Разработка лексического анализатора (сканера)
+Лабораторная работа №4: Реализация алгоритма поиска подстрок с помощью регулярных выражений
 
-Название: Разработка лексического анализатора (сканера) для языка программирования
-
-Цель работы: Изучить назначение и принципы работы лексического анализатора в структуре компилятора. Спроектировать алгоритм (диаграмму состояний) и выполнить программную реализацию сканера для выделения лексем из входного текста. Интегрировать разработанный модуль в ранее созданный графический интерфейс языкового процессора.
+Цель работы: Изучить теоретические основы регулярных выражений и их применение для поиска и извлечения подстрок из текста. Освоить практические навыки использования библиотечных средств работы с регулярными выражениями, а также интеграцию алгоритмов поиска в графический интерфейс приложения.
 
 Сведения об авторе
     Студент: Тарбаев Даба-Цырен
     Группа: АП-327
 
 Постановка задачи
-Разработать лексический анализатор (сканер) в соответствии с индивидуальным вариантом задания, интегрировать его в приложение из лабораторной работы №1 и обеспечить вывод результатов.
-
-Требования к реализации сканера:
-
-    Спроектировать диаграмму состояний конечного автомата
-
-    Разработать программный модуль лексического анализа, который:
-
-        принимает на вход строку (исходный текст программы)
-
-        выделяет все допустимые лексемы согласно варианту
-
-        классифицирует лексемы по типам
-
-        обрабатывает недопустимые символы с указанием позиции
-
-        учитывает многострочность входного текста
+Разработать модуль поиска подстрок с использованием регулярных выражений, интегрировать его в существующее приложение (текстовый редактор) и обеспечить наглядный вывод результатов.
 
 Вариант задания
-Тема 4. Объявление комплексного числа с инициализацией на языке C#
 
-Примеры корректных входных строк:
+    1 блок: Построить РВ, описывающее время в формате HH:MM.
+    2 блок: Построить РВ для поиска переменной в стиле snakeCase (используют только строчные буквы и нижние подчеркивания).
+    3 блок: Построить РВ для проверки данных полного DOI (идентификатор цифрового объекта).
 
-Complex c1 = new Complex(1.2, 6.0);
-Complex var = new Complex(-3.5, -2);
-Complex name = new Complex(10, -6.76);
-Complex x = new Complex(-5, 3.14);
+Решение задач
 
-Допустимые лексемы:
-Условный код	- Тип лексемы	- Лексемы
-1	Ключевое слово Complex	
-2	Ключевое слово new	
-3	Идентификатор	c1, var, x, name
-4	Оператор присваивания	=
-5	Разделитель (пробел)	(пробел)
-6	Оператор конструктора (	
-7	Оператор конструктора )	
-8	Знак минуса	-
-9	Целое без знака	0, 42, 100
-10	Вещественное число	1.2, 3.14, -6.76
-11	Оператор перечисления	,
-12	Оператор завершения	;
--1	Недопустимый символ	@, #, $ и т.д.
+блок 1
+    Описание задачи
+    Построить регулярное выражение, которое находит в тексте время в формате часы:минуты (HH:MM), где часы принимают значения от 00 до 23, а минуты — от 00 до 59.
+
+Регулярное выражение с пояснением каждого обозначения.
+([0-1][0-9]|2[0-3]):[0-5][0-9]
+    
+    [0-1]	Первая цифра часов: 0 или 1
+    [0-9]	Вторая цифра часов: любая от 0 до 9
+    |	Оператор "или" (альтернатива)
+    2[0-3]	Альтернатива для часов 20-23
+    :	Разделитель "двоеточие"
+    [0-5]	Первая цифра минут: 0-5
+    [0-9]	Вторая цифра минут: 0-9
+
+Примеры строк, которые должны находиться
+
+    00:00 00:01 00:59 01:00
+    01:10 01:30 02:15 03:45
+    04:00 05:05 06:30 07:00
+
+Примеры строк, которые не должны находиться;
+
+    24:00
+    24:01
+    25:00
+    29:59
+    30:00
+    99:99
 
 
-Диаграмма состояний
-<img width="2404" height="3844" alt="Лаба 2 тфяк-Страница — 2" src="https://github.com/user-attachments/assets/5e3ad840-c47a-4cac-8d29-03a2adfe83f4" />
-Рисунок 1 - Диаграмма состяний
+Тестовые примеры 
+<img width="984" height="730" alt="изображение" src="https://github.com/user-attachments/assets/2c64e217-1966-41bc-b627-362fafec31b1" />
+Рисунок 1 – Примеры строк, которые должны находиться
+
+<img width="986" height="727" alt="изображение" src="https://github.com/user-attachments/assets/17b5245b-aa7f-4ba7-b6a0-c11acd57b180" />
+Рисунок 2 – Примеры строк, которые не должны находиться
+
+блок 2
+Описание задачи
+    Построить регулярное выражение для поиска переменных в стиле snake_case, которые используют только строчные буквы (a-z) и символ подчеркивания (_). Переменная должна содержать хотя бы одно подчеркивание и не может начинаться или заканчиваться на подчеркивание.
+
+Регулярное выражение с пояснением каждого обозначения.
+\b[a-z][a-z]*(?:_[a-z]+)+\b
+
+    \b	Граница слова (начало или конец слова)
+    [a-z]	Первый символ — только строчная буква
+    [a-z]*	Ноль или более строчных букв после первого символа
+    (?: ... )	Незахватывающая группа
+    _	Символ подчеркивания
+    [a-z]+	Одна или более строчных букв после подчеркивания
+    +	Повтор группы (должно быть хотя бы одно подчеркивание)
+    \b	Граница слова (конец слова)
+
+Примеры строк, которые должны находиться
+
+    max_attempts first_name
+    first_name item_price
+    calculate_sum_fsd
+    user_id snake_case
+
+Примеры строк, которые не должны находиться
+
+    camelCase user_123_profile
+    count123 max123_attempts456
+    color_rgb_255_128_0 api_22_endpoint
+    temp_celsius_100
+    id_007 MAX_RETRY_COUNT 
+
+Тестовые примеры 
+<img width="986" height="723" alt="изображение" src="https://github.com/user-attachments/assets/74deaa0f-b965-4c8e-b1fd-292fc4239ddb" />
+Рисунок 3 – Примеры строк, которые должны находиться
+
+<img width="983" height="731" alt="изображение" src="https://github.com/user-attachments/assets/12a8a7e0-d079-4cd7-b62d-146b77bb9938" />
+Рисунок 4 – Примеры строк, которые не должны находиться
+
+блок 3
+
+Описание задачи
+    Построить регулярное выражение для проверки данных полного DOI — уникального идентификатора цифрового объекта. Формат DOI: 10.xxxx/строка, где xxxx — четыре цифры, а после слеша может быть любая последовательность допустимых символов
+
+Регулярное выражение с пояснением каждого обозначения.
+
+\b10\.\d{4}\/[._\-;%#()\/:+*\\|a-zA-Z0-9]+\b
+
+    \b	Граница слова
+    10	Префикс DOI (всегда начинается с 10)
+    \.	Точка (экранированная)
+    \d{4}	Ровно четыре цифры
+    \/	Слеш (экранированный)
+    [._\-;%#()\/:+*\\|a-zA-Z0-9]+	Один или более допустимых символов
+    \b	Граница слова
+
+Примеры строк, которые должны находиться
+
+    10.1006/jmbi.1998.2354
+    10.2632/a.gutierrez.zarza.02.2018.03----
+    
+    https://doi.org/10.1002/(SICI)1098-2345(1997)43:2%3C159::AID-AJP5%3E3.0.CO;2-W
+    
+    10.1002/0470841557.ch1#p1
+    10.5479/si.00810282.637.1
+    
+    Журнал	Пример DOI
+    Nature 10.1038/s41586-024-07421-0
+    Science	10.1126/science.abc1234
+    Cell	10.1016/j.cell.2024.01.001;;::
+    PLOS ONE	10.1371/journal.pone.0123456+#@$!
+    IEEE	10.1109/TPAMI.2024.1234567!!
+    Springer	10.1007/s11042-024-12345-6
+
+Примеры строк, которые не должны находиться
+
+    10.12345/energytech.2023.1
+    10.21/FQSQT4T3
+    10.123/abc
+    10.17034/...
+    10.1/1
+    10.100/292
+    20.1000/292
+    10.1000/
+    10.1000
+
 Тестовые примеры
-Представлен пример успешной обработки одной строки. (Рисунок 2) 
-<img width="984" height="727" alt="изображение" src="https://github.com/user-attachments/assets/beb6e120-6f6d-4621-914d-39b04edad8b7" />
-Рисунок 2 - Пример успешной обработки
 
-Пример с недопустимыми символами в строке. (Рисунок 3) 
-<img width="987" height="730" alt="изображение" src="https://github.com/user-attachments/assets/a21a6af4-dbd1-442b-8c37-cd3cf17c9156" />
-Рисунок 3 - Пример с недопустимыми символами обработки
+<img width="988" height="774" alt="изображение" src="https://github.com/user-attachments/assets/f0f92501-7620-48b9-929b-c213d222fd81" />
+Рисунок 5 – Примеры строк, которые должны находиться
 
-Многострочный пример. (Рисунок 4) 
-<img width="983" height="729" alt="изображение" src="https://github.com/user-attachments/assets/37b7149c-b1b5-4ca5-9868-19422ebcd6ef" />
-Рисунок 4 - Многострочный пример
+<img width="987" height="774" alt="изображение" src="https://github.com/user-attachments/assets/7cb1a4a8-37a4-42cc-9111-ca1a69cd2bab" />
+Рисунок 6 – Примеры строк, которые не должны находиться
+
 
 Дополнительное задание
 
-Были установлены FLEX&BISON и разработана грамматика для них. Результат прдеставлен на рисунке 5
-<img width="980" height="725" alt="изображение" src="https://github.com/user-attachments/assets/5eea5728-0108-421d-a79e-5e26488e9895" />
+реализовали алгоритм поиска подстрок переменных в стиле snake_case в тексте, перейдя к графу автомата
 
-Рисунок 5 - Успешно просканирвоанны строки
-
-<img width="981" height="726" alt="изображение" src="https://github.com/user-attachments/assets/cf873c75-5676-4723-a01a-487adf89d9d6" />
-
-Рисунок 6 - Ошибки
-
-Файл program.l 
-    
-    %{
-    #define YYSTYPE std::string
-    #define YY_NO_UNISTD_H
-    
-    #include <string>
-    #include "parser.tab.hpp"
-    
-    int line_number = 1;
-    %}
-    
-    %option c++
-    %option noyywrap
-    %option yylineno
-    
-    %%
-    
-    "Complex" {
-        yylval = yytext;
-        return COMPLEX_TYPE;
-    }
-    
-    "new" {
-        yylval = yytext;
-        return NEW;
-    }
-    
-    "=" {
-        yylval = yytext;
-        return EQUALS;
-    }
-    
-    ";" {
-        yylval = yytext;
-        return SEMICOLON;
-    }
-    
-    "(" {
-        yylval = yytext;
-        return OPEN_PAREN;
-    }
-    
-    ")" {
-        yylval = yytext;
-        return CLOSE_PAREN;
-    }
-    
-    "," {
-        yylval = yytext;
-        return COMMA;
-    }
-    
-    [a-zA-Z][a-zA-Z0-9]* {
-        yylval = yytext;
-        return ID;
-    }
-    
-    [+-]?[0-9]+(\.[0-9]+)?([Ee][+-]?[0-9]+)? {
-        yylval = yytext;
-        return NUMBER;
-    }
-    
-    \n {
-        line_number = yylineno;
-    }
-    
-    [ \t] {  }
-    
-    . {
-        yylval = yytext;
-        return LEXERROR;
-    }
-    
-    %%
-
-Файл program.y 
-    
-    %define parse.error verbose 
-    %{
-    #include <string>
-    #include <list>
-    #include "SyntaxError.h"
-    
-    extern int yylex();
-    extern int line_number;
-    
-    std::list<syntaxError> error_list;
-    
-    void yyerror(const char* s)
-    {
-        syntaxError error;
-        error.errorMessage = std::string("error: ") + s;
-        error.line = line_number;
-        error_list.push_back(error);           
-    }
-    %}
-    
-    %token COMPLEX_TYPE
-    %token NEW
-    %token ID
-    %token EQUALS
-    %token SEMICOLON
-    %token OPEN_PAREN
-    %token CLOSE_PAREN
-    %token COMMA
-    %token NUMBER
-    %token LEXERROR
-    
-    %%
-    
-    prog: def progRem | ;
-    
-    def: COMPLEX_TYPE ID EQUALS NEW COMPLEX_TYPE OPEN_PAREN NUMBER COMMA NUMBER CLOSE_PAREN SEMICOLON
-        | COMPLEX_TYPE error EQUALS NEW COMPLEX_TYPE OPEN_PAREN NUMBER COMMA NUMBER CLOSE_PAREN SEMICOLON
-        | COMPLEX_TYPE ID error NEW COMPLEX_TYPE OPEN_PAREN NUMBER COMMA NUMBER CLOSE_PAREN SEMICOLON
-        | COMPLEX_TYPE ID EQUALS error COMPLEX_TYPE OPEN_PAREN NUMBER COMMA NUMBER CLOSE_PAREN SEMICOLON
-        | COMPLEX_TYPE ID EQUALS NEW error OPEN_PAREN NUMBER COMMA NUMBER CLOSE_PAREN SEMICOLON
-        | COMPLEX_TYPE ID EQUALS NEW COMPLEX_TYPE error NUMBER COMMA NUMBER CLOSE_PAREN SEMICOLON
-        | COMPLEX_TYPE ID EQUALS NEW COMPLEX_TYPE OPEN_PAREN error COMMA NUMBER CLOSE_PAREN SEMICOLON
-        | COMPLEX_TYPE ID EQUALS NEW COMPLEX_TYPE OPEN_PAREN NUMBER error NUMBER CLOSE_PAREN SEMICOLON
-        | COMPLEX_TYPE ID EQUALS NEW COMPLEX_TYPE OPEN_PAREN NUMBER COMMA error CLOSE_PAREN SEMICOLON
-        | COMPLEX_TYPE ID EQUALS NEW COMPLEX_TYPE OPEN_PAREN NUMBER COMMA NUMBER error SEMICOLON
-        | COMPLEX_TYPE ID EQUALS NEW COMPLEX_TYPE OPEN_PAREN NUMBER COMMA NUMBER CLOSE_PAREN error
-        | LEXERROR SEMICOLON
-        | error SEMICOLON;
-    
-    progRem: def progRem
-           | /* empty */
-           ;
-    
-    %%
+<img width="961" height="462" alt="изображение" src="https://github.com/user-attachments/assets/ea5535ae-36b2-4a73-8cbc-dc21323302cd" />
+Рисунок 7 – Граф автомата переменных в стиле snake_case
+Где letter = [a-z]
+<img width="986" height="726" alt="изображение" src="https://github.com/user-attachments/assets/6643d24c-7865-4df7-8209-74da5df10ebe" />
+Рисунок 8 – Тестовые примеры
